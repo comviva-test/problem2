@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.comviva.dataBase.Database;
 import com.comviva.exception.FileProcessException;
+import com.comviva.exception.SQLInsertException;
 import com.comviva.file.FileProcess;
 
 @SpringBootApplication
@@ -27,18 +28,37 @@ public class App {
 	}
 	 
 	public static void main(String[] args) {
+		System.out.println("Start Process");
 		SpringApplication.run(App.class, args);
+		System.out.println("initialize tables");
 		db.initializedTables();
+		String path = args[0];
+		Double sum = null;
+		System.out.println("Process File");
+		sum = processFile(path);
+		System.out.println("Insert Register");
+		insertRegister(path, sum, new Date());
+		System.out.println("Finish Process");
+	}
+
+	private static void insertRegister(String path, Double sum, Date date) {
+		try {
+			db.insert(path, sum, date);
+		} catch (SQLInsertException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static Double processFile(String path) {
 		FileProcess fp = new FileProcess();
 		Double sum = null;
-		String path = "/home/hernan/workspace/eclipse-workspace/comviva2/files/test1.txt";
 		try {
 			sum = fp.sumAllNumbers(path);
-			System.out.println("The sum of all numbers are : " + sum);
 		} catch (FileProcessException e) {
 			e.printStackTrace();
 		}
-		db.save(path, sum, new Date());
+		return sum;
+		
 	}
 
 }

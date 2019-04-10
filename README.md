@@ -1,6 +1,6 @@
 # Description:
 Enhance the previous program, so that it also saves in a new record of a table using plain JDBC in a
-SQL database (like HyperSQL, ORACLE, MySQL, etc.):
+MySQL database:
 
 * the file path
 * the result of the addition
@@ -20,6 +20,13 @@ perform SQL operations. The connection string, user name and password to connect
 database must be configurable in an external text file (.properties or .xml ).
 
 
+# Precondition
+* The Server MySQL must be running.
+* The DB must be created (for example comviva)
+
+
 # Configuration:
- - 
+* In application.properties file are setup the db configuration.
+* Run App.java from java application.
+
 

@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.comviva.configuration.MyConnection;
+import com.comviva.exception.SQLInsertException;
 
 @Component
 public final class Database {
@@ -17,6 +20,7 @@ public final class Database {
 	@Autowired
 	private MyConnection myConnection;
 	
+	private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public Database() {
 	}
 	
@@ -31,8 +35,8 @@ public final class Database {
 			String sqlCreateTableComviva = "CREATE TABLE IF NOT EXISTS comviva (\n" + 
 					" FILENAME VARCHAR(256) NOT NULL,\n" + 
 					" FILEVALUE FLOAT,\n" + 
-					" PROCESSDATE TIMESTAMP,\n" + 
-					" PRIMARY KEY(FILENAME)\n" + 
+					" PROCESSDATE DATETIME NOT NULL,\n" + 
+					" PRIMARY KEY(FILENAME, PROCESSDATE)\n" + 
 					");";
 			statement.execute(sqlCreateTableComviva);
 		} catch (SQLException e) {
@@ -41,7 +45,7 @@ public final class Database {
 		}
 	}
 
-	public void save(String path, Double sum, Date date) {
+	public void insert(String path, Double sum, Date date) throws SQLInsertException {
 		try {
 			Connection connection = myConnection.getConnection();
 			String sqlInsertRegister = "INSERT INTO comviva (FILENAME, FILEVALUE, PROCESSDATE)\n" + 
@@ -49,12 +53,11 @@ public final class Database {
 			PreparedStatement ps = connection.prepareStatement(sqlInsertRegister);
 			ps.setString(1, path);
 			ps.setDouble(2, sum);
-			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-			ps.setDate(3, sqlDate);
+			ps.setString(3, dateFormat.format(date));
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new SQLInsertException("Error saving register");
 		}
 	}
 	
