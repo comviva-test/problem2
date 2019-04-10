@@ -25,8 +25,17 @@ database must be configurable in an external text file (.properties or .xml ).
 * The DB must be created (for example comviva)
 
 
-# Configuration:
-* In application.properties file are setup the db configuration.
-* Run App.java from java application.
-
-
+# Deploy:
+ - application.properties file are setup the db configuration.
+ - download dependences, compile and generate target folder:
+```sh
+ - mvn compile
+```
+ - test:
+```sh
+    mvn test
+```
+ - run: 
+ ```sh
+    mvn -q exec:java -e -Dexec.mainClass=com.comviva.App -Dexec.args="/home/hernan/workspace/eclipse-workspace/comviva/files/test1.txt"
+```
