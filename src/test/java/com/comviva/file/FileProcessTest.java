@@ -3,6 +3,9 @@ package com.comviva.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import org.junit.Test;
 
@@ -24,12 +27,14 @@ public class FileProcessTest {
 	@Test()
 	public void fileProcessSumAllNumberOfFile() throws FileProcessException {
 		FileProcess fp = new FileProcess();
-		assertEquals(new Double(124.2), fp.sumAllNumbers("/home/hernan/workspace/eclipse-workspace/comviva/files/test1.txt"));
+		Double sum = fp.sumAllNumbers("/home/hernan/workspace/eclipse-workspace/comviva/files/test1.txt");
+		assertEquals(new Double(124.20), new Double(new BigDecimal(sum).setScale(2, RoundingMode.HALF_EVEN).doubleValue()));
 	}
 	
 	@Test(expected=FileProcessException.class)
 	public void fileProcessReturnException() throws FileProcessException {
 		FileProcess fp = new FileProcess();
-		assertEquals(new Double(124.2), fp.sumAllNumbers("/home/hernan/workspace/eclipse-workspace/comviva/files/test2.txt"));
+		Double sum = fp.sumAllNumbers("/home/hernan/workspace/eclipse-workspace/comviva/files/test2.txt");
+		assertEquals(new Double(124.20), new Double(new BigDecimal(sum).setScale(2, RoundingMode.HALF_EVEN).doubleValue()));
 	}
 }
